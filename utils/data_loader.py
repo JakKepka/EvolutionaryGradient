@@ -1,17 +1,21 @@
 import torch
 from torchvision import datasets, transforms
+from torch.utils.data import DataLoader, random_split
 
-def load_mnist(batch_size=64, shuffle=True, num_workers=2):
+def load_mnist(batch_size=64, shuffle=True, num_workers=0, valid_size=0.1, seed=42):
     """
-    Ładuje zbiór danych MNIST i zwraca obiekty DataLoader dla zbiorów treningowego i testowego.
+    Ładuje zbiór danych MNIST i zwraca obiekty DataLoader dla zbiorów treningowego, walidacyjnego i testowego.
 
     Parametry:
     - batch_size (int): Rozmiar partii danych.
     - shuffle (bool): Czy losowo mieszać dane treningowe.
     - num_workers (int): Liczba procesów do ładowania danych.
+    - valid_size (float): Proporcja zbioru walidacyjnego względem zbioru treningowego.
+    - seed (int): Wartość ziarna dla generatora losowego (zapewnia powtarzalność podziału).
 
     Zwraca:
     - train_loader (DataLoader): DataLoader dla zbioru treningowego.
+    - valid_loader (DataLoader): DataLoader dla zbioru walidacyjnego.
     - test_loader (DataLoader): DataLoader dla zbioru testowego.
     - input_size (int): Rozmiar wejścia (liczba cech).
     - output_size (int): Liczba klas wyjściowych.
@@ -24,12 +28,23 @@ def load_mnist(batch_size=64, shuffle=True, num_workers=2):
     ])
 
     # Pobieranie zbioru treningowego
-    train_dataset = datasets.MNIST(
+    full_train_dataset = datasets.MNIST(
         root='./data/mnist',
         train=True,
         download=True,
         transform=transform
     )
+
+    # Obliczanie rozmiarów zbiorów treningowego i walidacyjnego
+    total_train_size = len(full_train_dataset)
+    valid_size = int(valid_size * total_train_size)
+    train_size = total_train_size - valid_size
+
+    # Ustawienie generatora losowego z określonym ziarnem
+    generator = torch.Generator().manual_seed(seed)
+
+    # Podział zbioru na treningowy i walidacyjny
+    train_dataset, valid_dataset = random_split(full_train_dataset, [train_size, valid_size], generator=generator)
 
     # Pobieranie zbioru testowego
     test_dataset = datasets.MNIST(
@@ -40,14 +55,21 @@ def load_mnist(batch_size=64, shuffle=True, num_workers=2):
     )
 
     # Tworzenie DataLoaderów
-    train_loader = torch.utils.data.DataLoader(
+    train_loader = DataLoader(
         train_dataset,
         batch_size=batch_size,
         shuffle=shuffle,
         num_workers=num_workers
     )
 
-    test_loader = torch.utils.data.DataLoader(
+    valid_loader = DataLoader(
+        valid_dataset,
+        batch_size=batch_size,
+        shuffle=False,
+        num_workers=num_workers
+    )
+
+    test_loader = DataLoader(
         test_dataset,
         batch_size=batch_size,
         shuffle=False,
@@ -60,4 +82,4 @@ def load_mnist(batch_size=64, shuffle=True, num_workers=2):
     # Liczba klas: cyfry od 0 do 9
     output_size = 10
 
-    return train_loader, test_loader, input_size, output_size
+    return train_loader, valid_loader, test_loader, input_size, output_size
