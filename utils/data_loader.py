@@ -59,7 +59,6 @@ def load_mnist(batch_size=64, seed=42):
 
     return train_loader, val_loader, test_loader, input_size, output_size
 
-
 def load_wine_dataset(batch_size=32, seed=42):
     """
     Ładuje zbiór danych Wine, standaryzuje cechy, dzieli na train/val/test i zwraca DataLoadery oraz rozmiary.
@@ -104,7 +103,6 @@ def load_wine_dataset(batch_size=32, seed=42):
     output_size = len(set(y))
 
     return train_loader, val_loader, test_loader, input_size, output_size
-
 
 def load_breast_cancer_dataset(batch_size=32, seed=42):
     """

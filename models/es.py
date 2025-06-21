@@ -48,8 +48,8 @@ def binary_tournament_selection(fitnesses, k):
             selected.append(idx2)
     return selected
 
-# Main training function with validation and training set evaluation per generation
-def train_es(model, train_loader, valid_loader, variant='modified-ES', mu=30, lambda_=30, max_evals=15000, device='cpu'):
+# Main training function with training history
+def train_es(model, train_loader, valid_loader, variant='modified-ES', mu=30, lambda_=30, max_evals=15000, device='cpu', print_metrics=True):
     # Initialize model
     n_weights = model.get_weights().numel()
 
@@ -63,6 +63,9 @@ def train_es(model, train_loader, valid_loader, variant='modified-ES', mu=30, la
     fitnesses = [evaluate_individual(model, weights, train_loader, device) for weights in population_weights]
     function_evals = mu
     g = 0
+
+    # Initialize training history
+    history = []
 
     while function_evals < max_evals:
         offspring_weights = []
@@ -142,11 +145,21 @@ def train_es(model, train_loader, valid_loader, variant='modified-ES', mu=30, la
         # Evaluate on validation set
         val_loss, val_acc = evaluate_model(model, best_weights, valid_loader, device)
         
-        # Print results for each generation
-        print(f"Generation {g}:")
-        print(f"  Training Loss: {train_loss:.4f}, Accuracy: {train_acc:.2f}%")
-        print(f"  Validation Loss: {val_loss:.4f}, Accuracy: {val_acc:.2f}%")
-        print(f"  Best Fitness: {min(fitnesses):.4f}")
+        # Store statistics in history
+        history.append({
+            'generation': g,
+            'train_loss': train_loss,
+            'train_accuracy': train_acc,
+            'val_loss': val_loss,
+            'val_accuracy': val_acc,
+            'best_fitness': min(fitnesses)
+        })
+        if print_metrics == True:
+            # Print results for each generation
+            print(f"Generation {g}:")
+            print(f"  Training Loss: {train_loss:.4f}, Accuracy: {train_acc:.2f}%")
+            print(f"  Validation Loss: {val_loss:.4f}, Accuracy: {val_acc:.2f}%")
+            print(f"  Best Fitness: {min(fitnesses):.4f}")
     
     # Set best weights
     best_index = np.argmin(fitnesses)
@@ -155,4 +168,4 @@ def train_es(model, train_loader, valid_loader, variant='modified-ES', mu=30, la
     # Final validation
     val_loss, val_acc = evaluate_model(model, population_weights[best_index], valid_loader, device)
     print(f"Final Validation Loss: {val_loss:.4f}, Accuracy: {val_acc:.2f}%")
-    return model, min(fitnesses)
+    return model, history
