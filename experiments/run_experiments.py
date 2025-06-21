@@ -45,8 +45,8 @@ train_loader_iris, valid_loader_iris, test_loader_iris, input_size_iris, output_
 configurations = [
     {'mu': 30, 'lambda_': 30, 'variant': 'modified-ES'},
     {'mu': 50, 'lambda_': 50, 'variant': 'modified-ES'},
-    {'mu': 30, 'lambda_': 30, 'variant': 'mu_lambda'},
-    {'mu': 50, 'lambda_': 50, 'variant': 'mu_lambda'},
+    {'mu': 30, 'lambda_': 30, 'variant': 'mu-lambda'},
+    {'mu': 50, 'lambda_': 50, 'variant': 'mu-lambda'},
 ]
 
 # Definicja modeli dla każdego zbioru danych
@@ -106,7 +106,6 @@ os.makedirs(os.path.dirname(output_path), exist_ok=True)
 elapsed_global_time = time.time() - start_global_time
 print(f'Eksperymenty trwały łacznie: {elapsed_global_time}')
 
-# Zamiana torch.Tensor na float (jeśli są w historii)
 def tensor_to_float(obj):
     if isinstance(obj, torch.Tensor):
         return obj.item()
@@ -116,9 +115,23 @@ def tensor_to_float(obj):
         return [tensor_to_float(x) for x in obj]
     return obj
 
-results_serializable = {k: {'history': tensor_to_float(v['history'])} for k, v in results.items()}
+# Przygotowanie wyników do serializacji (model jako string z klasy i parametrami)
+def model_to_str(model):
+    return str(model)
+
+results_serializable = {
+    k: {
+        'history': tensor_to_float(v['history']),
+        'training_time': v['training_time'],
+        'model': model_to_str(v['model'])
+    }
+    for k, v in results.items()
+}
 
 with open(output_path, "w") as f:
     json.dump(results_serializable, f, indent=2)
 
+
 print(f"Historia treningu zapisana do: {output_path}")
+
+#results_serializable = {k: {'history': tensor_to_float(v['history']), 'training_time': tensor_to_float(v['training_time']), 'model': tensor_to_float(v['model'])} for k, v in results.items()}
