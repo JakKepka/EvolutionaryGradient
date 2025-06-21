@@ -3,10 +3,9 @@ from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, random_split
 import torch
 from torch.utils.data import DataLoader, TensorDataset
-from sklearn.datasets import load_wine
+from sklearn.datasets import load_wine, load_breast_cancer, load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-
 
 def load_mnist(batch_size=64, seed=42):
     """
@@ -93,6 +92,83 @@ def load_wine_dataset(batch_size=32, seed=42):
     y_test = torch.tensor(y_test, dtype=torch.long)
 
     # Tworzenie datasetów i DataLoaderów
+    train_dataset = TensorDataset(X_train, y_train)
+    val_dataset = TensorDataset(X_val, y_val)
+    test_dataset = TensorDataset(X_test, y_test)
+
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+
+    input_size = X.shape[1]
+    output_size = len(set(y))
+
+    return train_loader, val_loader, test_loader, input_size, output_size
+
+
+def load_breast_cancer_dataset(batch_size=32, seed=42):
+    """
+    Ładuje zbiór danych Breast Cancer Wisconsin, standaryzuje cechy, dzieli na train/val/test i zwraca DataLoadery oraz rozmiary.
+    """
+    data = load_breast_cancer()
+    X = data.data
+    y = data.target
+
+    scaler = StandardScaler()
+    X = scaler.fit_transform(X)
+
+    X_train_val, X_test, y_train_val, y_test = train_test_split(
+        X, y, stratify=y, test_size=0.40, random_state=seed
+    )
+    X_train, X_val, y_train, y_val = train_test_split(
+        X_train_val, y_train_val, stratify=y_train_val, test_size=0.5, random_state=seed
+    )
+
+    X_train = torch.tensor(X_train, dtype=torch.float32)
+    y_train = torch.tensor(y_train, dtype=torch.long)
+    X_val = torch.tensor(X_val, dtype=torch.float32)
+    y_val = torch.tensor(y_val, dtype=torch.long)
+    X_test = torch.tensor(X_test, dtype=torch.float32)
+    y_test = torch.tensor(y_test, dtype=torch.long)
+
+    train_dataset = TensorDataset(X_train, y_train)
+    val_dataset = TensorDataset(X_val, y_val)
+    test_dataset = TensorDataset(X_test, y_test)
+
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+
+    input_size = X.shape[1]
+    output_size = len(set(y))
+
+    return train_loader, val_loader, test_loader, input_size, output_size
+
+def load_iris_dataset(batch_size=32, seed=42):
+    """
+    Ładuje zbiór danych Iris, standaryzuje cechy, dzieli na train/val/test i zwraca DataLoadery oraz rozmiary.
+    """
+    data = load_iris()
+    X = data.data
+    y = data.target
+
+    scaler = StandardScaler()
+    X = scaler.fit_transform(X)
+
+    X_train_val, X_test, y_train_val, y_test = train_test_split(
+        X, y, stratify=y, test_size=0.40, random_state=seed
+    )
+    X_train, X_val, y_train, y_val = train_test_split(
+        X_train_val, y_train_val, stratify=y_train_val, test_size=0.5, random_state=seed
+    )
+
+    X_train = torch.tensor(X_train, dtype=torch.float32)
+    y_train = torch.tensor(y_train, dtype=torch.long)
+    X_val = torch.tensor(X_val, dtype=torch.float32)
+    y_val = torch.tensor(y_val, dtype=torch.long)
+    X_test = torch.tensor(X_test, dtype=torch.float32)
+    y_test = torch.tensor(y_test, dtype=torch.long)
+
     train_dataset = TensorDataset(X_train, y_train)
     val_dataset = TensorDataset(X_val, y_val)
     test_dataset = TensorDataset(X_test, y_test)

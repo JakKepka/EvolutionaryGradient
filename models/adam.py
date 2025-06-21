@@ -19,7 +19,7 @@ def train_with_adam(model, train_loader, valid_loader, epochs, learning_rate, de
         progress_bar = tqdm(train_loader, desc=f"Epoch {epoch+1}/{epochs}", unit="batch")
 
         for inputs, targets in progress_bar:
-            inputs, targets = inputs.to(device, dtype=torch.float64), targets.to(device)
+            inputs, targets = inputs.to(device), targets.to(device)
 
             # Zerowanie gradientów
             optimizer.zero_grad()
@@ -48,7 +48,7 @@ def train_with_adam(model, train_loader, valid_loader, epochs, learning_rate, de
 
         with torch.no_grad():
             for inputs, targets in valid_loader:
-                inputs, targets = inputs.to(device, dtype=torch.float64), targets.to(device)
+                inputs, targets = inputs.to(device), targets.to(device)
                 outputs = model(inputs)
                 loss = criterion(outputs, targets)
 
