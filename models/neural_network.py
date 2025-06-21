@@ -1,21 +1,3 @@
-import torch.nn as nn
-import torch
-
-class SimpleNN(nn.Module):
-    def __init__(self, input_size, hidden_size, output_size):
-        super(SimpleNN, self).__init__()
-        self.model = nn.Sequential(
-            nn.Flatten(),  # Przekształca (batch_size, 1, 28, 28) do (batch_size, 784)
-            nn.Linear(input_size, hidden_size),
-            nn.ReLU(),
-            nn.Linear(hidden_size, output_size)
-        )
-        self.model = self.model.to(torch.float64)  # Changed from float32 to float64
-
-    def forward(self, x):
-        return self.model(x)
-    
-
 import torch
 import torch.nn as nn
 
@@ -28,6 +10,7 @@ class MLP(nn.Module):
         self.output_size = output_size
         self.fc1 = nn.Linear(input_size, hidden_size)
         self.fc2 = nn.Linear(hidden_size, output_size)
+        
         # Initialize weights in [-1, 1]
         nn.init.uniform_(self.fc1.weight, -1, 1)
         nn.init.uniform_(self.fc1.bias, -1, 1)
