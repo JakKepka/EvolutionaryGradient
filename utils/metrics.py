@@ -20,7 +20,7 @@ def evaluate_model(model, data_loader, device='cpu'):
 
     with torch.no_grad():
         for inputs, labels in data_loader:
-            inputs = inputs.to(device)
+            inputs = inputs.to(device, dtype=torch.float64)
             labels = labels.to(device)
 
             outputs = model(inputs)
