@@ -16,12 +16,17 @@ from models.neural_network import MLP, DeepMLP
 from utils.data_loader import load_wine_dataset, load_breast_cancer_dataset, load_iris_dataset
 import argparse
 import time
+import random 
+import numpy as np
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--output', type=str, default="experiments/results/history_all.json", help="Ścieżka do pliku wynikowego")
+parser.add_argument('--repeats', type=int, default=2, help="Ile razy powtórzyć każdy eksperyment z różnymi seedami")
 args = parser.parse_args()
 
 output_path = args.output
+repeats = args.repeats
+
 
 # Ustawienie urządzenia
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -71,6 +76,8 @@ datasets = {
     'bcw': (train_loader_bcw, valid_loader_bcw)
 }
 
+seeds = [random.randint(0, 100000) for x in range(repeats)]
+
 # Trenowanie i zapisywanie wyników
 results = {}
 training_idx = 0
@@ -78,26 +85,36 @@ start_global_time = time.time()
 for dataset_name, (train_loader, valid_loader) in datasets.items():
     for model_name, model in models[dataset_name].items():
         for config in configurations:
-            print(f'training_idx {training_idx}')
-            print(f'Dataset_name: {dataset_name}')
-            print(f'model_name: {model_name}')
-            print(f'config: {config}')
-            start_time = time.time()
+            data = {}
+            for repeat, seed in enumerate(seeds):
+                # Ustal losowy seed dla każdej powtórki
+                print(f"\n=== Powtórka {repeat+1}/{repeats}, seed={seed} ===\n")
+                torch.manual_seed(seed)
+                np.random.seed(seed)
+                random.seed(seed)
 
-            model = model.to(device)
-            model_trained, history = train_es(
-                model, train_loader, valid_loader,
-                variant=config['variant'],
-                mu=config['mu'],
-                lambda_=config['lambda_'],
-                max_evals=15000,
-                device=device,
-                print_metrics=False
-            )
-            elapsed_time = time.time() - start_time
+                print(f'training_idx {training_idx}')
+                print(f'Dataset_name: {dataset_name}')
+                print(f'model_name: {model_name}')
+                print(f'config: {config}')
+                start_time = time.time()
+
+                model = model.to(device)
+                model_trained, history = train_es(
+                    model, train_loader, valid_loader,
+                    variant=config['variant'],
+                    mu=config['mu'],
+                    lambda_=config['lambda_'],
+                    max_evals=15000,
+                    device=device,
+                    print_metrics=False,
+                    seed=seed
+                )
+                elapsed_time = time.time() - start_time
+                data[seed] = {'model': model_trained, 'history': history, 'training_time' : elapsed_time}
 
             key = f"{dataset_name}_{model_name}_{config['variant']}_mu{config['mu']}_lambda{config['lambda_']}"
-            results[key] = {'model': model_trained, 'history': history, 'training_time' : elapsed_time}
+            results[key] = data
             print(f"Czas trenowania: {elapsed_time:.2f} sekund")
             training_idx += 1
 
@@ -121,9 +138,12 @@ def model_to_str(model):
 
 results_serializable = {
     k: {
-        'history': tensor_to_float(v['history']),
-        'training_time': v['training_time'],
-        'model': model_to_str(v['model'])
+        seed : {
+        'history': tensor_to_float(data['history']),
+        'training_time': data['training_time'],
+        'model': model_to_str(data['model'])
+        }
+        for seed, data in v.items()
     }
     for k, v in results.items()
 }
