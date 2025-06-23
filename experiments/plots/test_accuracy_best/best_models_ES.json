@@ -1,0 +1,74 @@
+[
+  {
+    "dataset": "bcw",
+    "model": "DeepMLP",
+    "test_accuracy_mean": 94.29824561403508,
+    "training_time_mean": 14.65239691734314,
+    "hyperparameters": {
+      "mu": 30,
+      "lambda_": 50,
+      "variant_mu_lambda": "False",
+      "modified_ES": "True"
+    }
+  },
+  {
+    "dataset": "bcw",
+    "model": "MLP",
+    "test_accuracy_mean": 95.17543859649123,
+    "training_time_mean": 13.297209024429321,
+    "hyperparameters": {
+      "mu": 30,
+      "lambda_": 30,
+      "variant_mu_lambda": "True",
+      "modified_ES": "True"
+    }
+  },
+  {
+    "dataset": "iris",
+    "model": "DeepMLP",
+    "test_accuracy_mean": 90.0,
+    "training_time_mean": 5.000361919403076,
+    "hyperparameters": {
+      "mu": 30,
+      "lambda_": 30,
+      "variant_mu_lambda": "True",
+      "modified_ES": "True"
+    }
+  },
+  {
+    "dataset": "iris",
+    "model": "MLP",
+    "test_accuracy_mean": 96.66666666666667,
+    "training_time_mean": 4.416897773742676,
+    "hyperparameters": {
+      "mu": 30,
+      "lambda_": 90,
+      "variant_mu_lambda": "False",
+      "modified_ES": "True"
+    }
+  },
+  {
+    "dataset": "wine",
+    "model": "DeepMLP",
+    "test_accuracy_mean": 90.27777777777777,
+    "training_time_mean": 5.0216288566589355,
+    "hyperparameters": {
+      "mu": 30,
+      "lambda_": 70,
+      "variant_mu_lambda": "False",
+      "modified_ES": "True"
+    }
+  },
+  {
+    "dataset": "wine",
+    "model": "MLP",
+    "test_accuracy_mean": 90.27777777777777,
+    "training_time_mean": 4.639533996582031,
+    "hyperparameters": {
+      "mu": 90,
+      "lambda_": 30,
+      "variant_mu_lambda": "False",
+      "modified_ES": "True"
+    }
+  }
+]

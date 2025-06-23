@@ -4,6 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import ast
+import os
+import json
 
 plt.grid(True, axis='y', linestyle='--', alpha=0.7)
 plt.rc('axes', grid=True)
@@ -194,52 +196,85 @@ def analyze_method(method):
 
         best_configs_df['params'] = best_configs_df.apply(param_label, axis=1)
 
-        # Wykres: Test Accuracy najlepszych konfiguracji (jeden wykres, każdy słupek to dataset+model)
+        # Ustal kolejność słupków: najpierw po dataset, potem po modelu
+        best_configs_df['dataset_model'] = best_configs_df['dataset'] + '_' + best_configs_df['model']
+        best_configs_df = best_configs_df.sort_values(['dataset', 'model'])
+        params_order = best_configs_df['params'].tolist()
+
+        # Przygotuj dane do zapisu (bez params)
+        best_models_info = []
+        for _, row in best_configs_df.iterrows():
+            best_models_info.append({
+                "dataset": str(row['dataset']),
+                "model": str(row['model']),
+                "test_accuracy_mean": float(row['test_accuracy_mean']),
+                "training_time_mean": float(row['training_time_mean']),
+                "hyperparameters": {col: (float(row[col]) if isinstance(row[col], (np.floating, float)) else int(row[col]) if isinstance(row[col], (np.integer, int)) else str(row[col])) for col in param_cols}
+            })
+
+        # Zapisz do pliku JSON w tej samej ścieżce co wykres
+        out_dir = "experiments/plots/test_accuracy_best"
+        os.makedirs(out_dir, exist_ok=True)
+        json_path = os.path.join(out_dir, f"best_models_{method}.json")
+        with open(json_path, "w") as f:
+            json.dump(best_models_info, f, indent=2)
+
                 # Wykres: Test Accuracy najlepszych konfiguracji (jeden wykres, każdy słupek to dataset+model)
-        # Wykres: Test Accuracy najlepszych konfiguracji (jeden wykres, każdy słupek to dataset+model)
-        plt.figure(figsize=(12, 6))
+        # 1. Wykres Test Accuracy
+        plt.figure(figsize=(8, 6))
         ax = sns.barplot(
             data=best_configs_df,
-            x='params',
+            x='dataset_model',
             y='test_accuracy_mean',
             hue='dataset',
+            order=best_configs_df['dataset_model'].tolist(),
             dodge=True,
             width=0.5,
             edgecolor='black'
         )
-        plt.title(f'Best Test Accuracy per Dataset/Model ({method})')
-        plt.xlabel('Best Hyperparameters')
+        plt.title(f'1. Best Test Accuracy per Dataset/Model ({method})')
+        plt.xlabel('Dataset & Model')
         plt.ylabel('Test Accuracy [%]')
         plt.legend(title='Dataset', loc='best')
         plt.grid(True, axis='y', linestyle='--', alpha=0.7)
-        plt.xticks(rotation=90)  # OBRÓT etykiet na osi X o 90 stopni
+
+        # Numeracja słupków
+        num_bars = len(best_configs_df['dataset_model'].tolist())
+        plt.xticks(ticks=range(num_bars), labels=[str(i+1) for i in range(num_bars)], rotation=0)
+
         for c in ax.containers:
             ax.bar_label(c, fmt='%.2f', padding=2)
-       
+
         plt.tight_layout()
         plt.savefig(f'experiments/plots/test_accuracy_best/test_accuracy_best_{method}.png')
         plt.close()
 
-        # Wykres: Training Time najlepszych konfiguracji (jeden wykres, każdy słupek to dataset+model)
-        plt.figure(figsize=(12, 6))
+        # 2. Wykres Training Time
+        out_dir2 = "experiments/plots/training_time_best"
+        os.makedirs(out_dir2, exist_ok=True)
+        plt.figure(figsize=(8, 6))
         ax = sns.barplot(
             data=best_configs_df,
-            x='params',
+            x='dataset_model',
             y='training_time_mean',
             hue='dataset',
+            order=best_configs_df['dataset_model'].tolist(),
             dodge=True,
             width=0.5,
             edgecolor='black'
         )
-        plt.title(f'Best Training Time per Dataset/Model ({method})')
-        plt.xlabel('Best Hyperparameters')
+        plt.title(f'2. Best Training Time per Dataset/Model ({method})')
+        plt.xlabel('Dataset & Model')
         plt.ylabel('Training Time [s]')
         plt.legend(title='Dataset', loc='best')
         plt.grid(True, axis='y', linestyle='--', alpha=0.7)
-        plt.xticks(rotation=90)  # OBRÓT etykiet na osi X o 90 stopni
+
+        # Numeracja słupków
+        plt.xticks(ticks=range(num_bars), labels=[str(i+1) for i in range(num_bars)], rotation=0)
+
         for c in ax.containers:
             ax.bar_label(c, fmt='%.2f', padding=2)
-       
+
         plt.tight_layout()
         plt.savefig(f'experiments/plots/training_time_best/training_time_best_{method}.png')
         plt.close()
@@ -248,6 +283,7 @@ def analyze_method(method):
     else:
         print(f"Brak najlepszych konfiguracji dla metody: {method}")
         return df
+    
 # print(results)
 # # Analyze each method separately
 # for method in hyperparameters.keys():
