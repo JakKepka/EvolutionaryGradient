@@ -6,6 +6,8 @@ from torch.utils.data import DataLoader, TensorDataset
 from sklearn.datasets import load_wine, load_breast_cancer, load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+import numpy as np
+import pandas as pd
 
 def load_mnist(batch_size=64, seed=42):
     """
@@ -179,3 +181,50 @@ def load_iris_dataset(batch_size=32, seed=42):
     output_size = len(set(y))
 
     return train_loader, val_loader, test_loader, input_size, output_size
+
+def load_steel_dataset(batch_size=32, seed=42):
+    """
+    Ładuje zbiór danych Steel, standaryzuje cechy, dzieli na train/val/test i zwraca DataLoadery oraz rozmiary.
+    """
+    import pandas as pd
+    url = 'http://apmonitor.com/pds/uploads/Main/steel.txt'
+    df = pd.read_csv(url)
+
+    # Pierwsze 27 kolumn to cechy, ostatnie 7 to etykiety one-hot
+    X = df.iloc[:, :-7].to_numpy()
+    y_bin = df.iloc[:, -7:].to_numpy()
+    y = np.argmax(y_bin, axis=1)
+
+    # Standaryzacja cech
+    scaler = StandardScaler()
+    X = scaler.fit_transform(X)
+
+    # Podział na train+val (60%) i test (40%)
+    X_train_val, X_test, y_train_val, y_test = train_test_split(
+        X, y, test_size=0.4, stratify=y, random_state=seed
+    )
+
+    # Podział train+val na train (50%) i val (50%) względem train_val (czyli 60/20 podział całości)
+    X_train, X_val, y_train, y_val = train_test_split(
+        X_train_val, y_train_val, test_size=0.5, stratify=y_train_val, random_state=seed
+    )
+
+    # Konwersja do tensorów PyTorch
+    X_train = torch.tensor(X_train, dtype=torch.float32)
+    y_train = torch.tensor(y_train, dtype=torch.long)
+    X_val = torch.tensor(X_val, dtype=torch.float32)
+    y_val = torch.tensor(y_val, dtype=torch.long)
+    X_test = torch.tensor(X_test, dtype=torch.float32)
+    y_test = torch.tensor(y_test, dtype=torch.long)
+
+    # Tworzenie DataLoaderów
+    train_loader = DataLoader(TensorDataset(X_train, y_train), batch_size=batch_size, shuffle=True)
+    val_loader = DataLoader(TensorDataset(X_val, y_val), batch_size=batch_size, shuffle=False)
+    test_loader = DataLoader(TensorDataset(X_test, y_test), batch_size=batch_size, shuffle=False)
+
+    input_size = X.shape[1]
+    output_size = len(np.unique(y))
+
+    return train_loader, val_loader, test_loader, input_size, output_size
+
+

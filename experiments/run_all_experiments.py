@@ -9,7 +9,7 @@ import torch.nn as nn
 import matplotlib.pyplot as plt
 import json
 from models.neural_network import MLP, DeepMLP
-from utils.data_loader import load_wine_dataset, load_breast_cancer_dataset, load_iris_dataset
+from utils.data_loader import load_wine_dataset, load_breast_cancer_dataset, load_iris_dataset, load_steel_dataset
 import argparse
 import time
 import random
@@ -17,9 +17,10 @@ import numpy as np
 from models.es import train_es
 from models.de import train_de, train_deaw, EDEAdam  # Import wszystkich metod
 from models.adam import train_with_adam
+
 # Parser argumentów
 parser = argparse.ArgumentParser()
-parser.add_argument('--output', type=str, default="experiments/results/history_all_final.json", help="Ścieżka do pliku wynikowego")
+parser.add_argument('--output', type=str, default="experiments/results/history_all_final_4_datasets.json", help="Ścieżka do pliku wynikowego")
 parser.add_argument('--repeats', type=int, default=1, help="Ile razy powtórzyć każdy eksperyment z różnymi seedami")
 args = parser.parse_args()
 
@@ -33,6 +34,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 train_loader_wine, valid_loader_wine, test_loader_wine, input_size_wine, output_size_wine = load_wine_dataset(batch_size=32, seed=42)
 train_loader_bcw, valid_loader_bcw, test_loader_bcw, input_size_bcw, output_size_bcw = load_breast_cancer_dataset(batch_size=32, seed=42)
 train_loader_iris, valid_loader_iris, test_loader_iris, input_size_iris, output_size_iris = load_iris_dataset(batch_size=32, seed=42)
+train_loader_steel, valid_loader_steel, test_loader_steel, input_size_steel, output_size_steel = load_steel_dataset(batch_size=32, seed=42)
 
 # Definicja modeli dla każdego zbioru danych
 models = {
@@ -47,13 +49,18 @@ models = {
     'bcw': {
         'MLP': MLP(input_size=input_size_bcw, hidden_size=input_size_bcw*2, output_size=output_size_bcw),
         'DeepMLP': DeepMLP(input_size=input_size_bcw, hidden_sizes=[input_size_bcw*2, input_size_bcw], output_size=output_size_bcw)
+    },
+     'steel': {
+        'MLP': MLP(input_size=input_size_steel, hidden_size=input_size_steel*2, output_size=output_size_steel),
+        'DeepMLP': DeepMLP(input_size=input_size_steel, hidden_sizes=[input_size_steel*2, input_size_steel], output_size=output_size_steel)
     }
 }
 
 datasets = {
     'wine': (train_loader_wine, valid_loader_wine, test_loader_wine),
     'iris': (train_loader_iris, valid_loader_iris, test_loader_iris),
-    'bcw': (train_loader_bcw, valid_loader_bcw, test_loader_bcw)
+    'bcw': (train_loader_bcw, valid_loader_bcw, test_loader_bcw),
+    'steel': (train_loader_steel, valid_loader_steel, test_loader_steel)
 }
 
 configurations = {

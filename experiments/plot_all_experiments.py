@@ -5,15 +5,17 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import ast
 
+plt.grid(True, axis='y', linestyle='--', alpha=0.7)
+plt.rc('axes', grid=True)
 # Define hyperparameters for each method
 hyperparameters = {
-    'ES': ['mu', 'lambda_', 'modified_ES'],#'variant_mu_lambda', 'modified_ES'],
+    'ES': ['mu', 'lambda_', 'variant_mu_lambda', 'modified_ES'],
     'DE': ['NP', 'F', 'CR', 'max_generations', 'initial_lower', 'initial_upper'],
     'DEAW': ['NP', 'F', 'CR', 'max_generations', 'initial_lower', 'initial_upper'],
     'EDEAdam': ['pop_size', 'max_evals', 'exchange_interval', 'batch_size']
 }
 
-with open('experiments/results/history_all.json', 'r') as f:
+with open('experiments/results/history_all_final.json', 'r') as f:
     results = json.load(f)
 
 def load_and_parse_data(method, results):
@@ -67,7 +69,7 @@ def generate_summary(df, method):
 
     # Spłaszcz MultiIndex
     summary.columns = ['_'.join(col) if isinstance(col, tuple) and col[1] else col[0] for col in summary.columns.values]
-
+    
     return summary
 
 def print_tables(summary, method):
@@ -101,7 +103,7 @@ def plot_es_hyperparameters(summary, method):
                 plt.xlabel('mu')
                 plt.ylabel('Average Test Accuracy')
                 plt.legend(title='modified_ES')
-                plt.savefig(f'experiments/plots/es_mu_effect_{dataset}_{model}.png')
+                plt.savefig(f'experiments/plots/es_mu_effect/es_mu_effect_{dataset}_{model}.png')
                 plt.close()
             
             # Test accuracy vs. lambda_ for mu=50
@@ -115,7 +117,7 @@ def plot_es_hyperparameters(summary, method):
                 plt.xlabel('lambda_')
                 plt.ylabel('Average Test Accuracy')
                 plt.legend(title='modified_ES')
-                plt.savefig(f'experiments/plots/es_lambda_effect_{dataset}_{model}.png')
+                plt.savefig(f'experiments/plots/es_lambda_effect/es_lambda_effect_{dataset}_{model}.png')
                 plt.close()
 
 
@@ -140,7 +142,7 @@ def plot_training_curves(df, summary, method):
                     plt.xlabel('Generation')
                     plt.ylabel('Validation Accuracy')
                     plt.legend()
-                    plt.savefig(f'experiments/plots/training_curve_{method}_{dataset}_{model}.png')
+                    plt.savefig(f'experiments/plots/training_curve/training_curve_{method}_{dataset}_{model}.png')
                     plt.close()
 
 
@@ -183,25 +185,69 @@ def analyze_method(method):
     print(best_configs)
     if best_configs:
         best_configs_df = pd.concat(best_configs, axis=1).T
-        best_configs_df['method'] = method  # Dodaj tę linię!
+        best_configs_df['method'] = method
 
-        # Plot computation time and test accuracy for best configs
-        sns.catplot(x='method', y='training_time_mean', col='dataset', row='model', 
-                    data=best_configs_df, kind='bar', height=4, aspect=1.5)
-        plt.suptitle(f'Average Training Time of Best Config ({method})', y=1.05)
-        plt.savefig(f'experiments/plots/training_time_best_{method}.png')
+        # Przygotuj etykiety hiperparametrów dla najlepszych konfiguracji
+        param_cols = hyperparameters[method]
+        def param_label(row):
+            return ', '.join([f"{col}={row[col]}" for col in param_cols])
+
+        best_configs_df['params'] = best_configs_df.apply(param_label, axis=1)
+
+        # Wykres: Test Accuracy najlepszych konfiguracji (jeden wykres, każdy słupek to dataset+model)
+                # Wykres: Test Accuracy najlepszych konfiguracji (jeden wykres, każdy słupek to dataset+model)
+        # Wykres: Test Accuracy najlepszych konfiguracji (jeden wykres, każdy słupek to dataset+model)
+        plt.figure(figsize=(12, 6))
+        ax = sns.barplot(
+            data=best_configs_df,
+            x='params',
+            y='test_accuracy_mean',
+            hue='dataset',
+            dodge=True,
+            width=0.5,
+            edgecolor='black'
+        )
+        plt.title(f'Best Test Accuracy per Dataset/Model ({method})')
+        plt.xlabel('Best Hyperparameters')
+        plt.ylabel('Test Accuracy [%]')
+        plt.legend(title='Dataset', loc='best')
+        plt.grid(True, axis='y', linestyle='--', alpha=0.7)
+        plt.xticks(rotation=90)  # OBRÓT etykiet na osi X o 90 stopni
+        for c in ax.containers:
+            ax.bar_label(c, fmt='%.2f', padding=2)
+       
+        plt.tight_layout()
+        plt.savefig(f'experiments/plots/test_accuracy_best/test_accuracy_best_{method}.png')
         plt.close()
-        
-        sns.catplot(x='method', y='test_accuracy_mean', col='dataset', row='model', 
-                    data=best_configs_df, kind='bar', height=4, aspect=1.5)
-        plt.suptitle(f'Test Accuracy of Best Config ({method})', y=1.05)
-        plt.savefig(f'experiments/plots/test_accuracy_best_{method}.png')
+
+        # Wykres: Training Time najlepszych konfiguracji (jeden wykres, każdy słupek to dataset+model)
+        plt.figure(figsize=(12, 6))
+        ax = sns.barplot(
+            data=best_configs_df,
+            x='params',
+            y='training_time_mean',
+            hue='dataset',
+            dodge=True,
+            width=0.5,
+            edgecolor='black'
+        )
+        plt.title(f'Best Training Time per Dataset/Model ({method})')
+        plt.xlabel('Best Hyperparameters')
+        plt.ylabel('Training Time [s]')
+        plt.legend(title='Dataset', loc='best')
+        plt.grid(True, axis='y', linestyle='--', alpha=0.7)
+        plt.xticks(rotation=90)  # OBRÓT etykiet na osi X o 90 stopni
+        for c in ax.containers:
+            ax.bar_label(c, fmt='%.2f', padding=2)
+       
+        plt.tight_layout()
+        plt.savefig(f'experiments/plots/training_time_best/training_time_best_{method}.png')
         plt.close()
+
         return df
     else:
         print(f"Brak najlepszych konfiguracji dla metody: {method}")
         return df
-    
 # print(results)
 # # Analyze each method separately
 # for method in hyperparameters.keys():
