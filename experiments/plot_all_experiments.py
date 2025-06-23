@@ -67,7 +67,7 @@ def generate_summary(df, method):
 
     # Spłaszcz MultiIndex
     summary.columns = ['_'.join(col) if isinstance(col, tuple) and col[1] else col[0] for col in summary.columns.values]
-    
+
     return summary
 
 def print_tables(summary, method):
@@ -197,9 +197,11 @@ def analyze_method(method):
         plt.suptitle(f'Test Accuracy of Best Config ({method})', y=1.05)
         plt.savefig(f'experiments/plots/test_accuracy_best_{method}.png')
         plt.close()
+        return df
     else:
         print(f"Brak najlepszych konfiguracji dla metody: {method}")
-        return
+        return df
+    
 # print(results)
 # # Analyze each method separately
 # for method in hyperparameters.keys():

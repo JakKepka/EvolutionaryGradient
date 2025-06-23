@@ -49,7 +49,7 @@ def binary_tournament_selection(fitnesses, k):
     return selected
 
 # Main training function with training history
-def train_es(model, train_loader, valid_loader, variant_mu_lambda=True, modified_ES=True, mu=30, lambda_=30, max_evals=15000, device='cpu', print_metrics=True, seed=42):
+def train_es(model, train_loader, valid_loader, variant_mu_lambda=True, modified_ES=True, mu=30, lambda_=30, max_evals=2000, device='cpu', print_metrics=True, seed=42):
     # Initialize model
     n_weights = model.get_weights().numel()
 

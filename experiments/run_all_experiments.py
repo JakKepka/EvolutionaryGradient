@@ -16,11 +16,11 @@ import random
 import numpy as np
 from models.es import train_es
 from models.de import train_de, train_deaw, EDEAdam  # Import wszystkich metod
-
+from models.adam import train_with_adam
 # Parser argumentów
 parser = argparse.ArgumentParser()
-parser.add_argument('--output', type=str, default="experiments/results/history_all.json", help="Ścieżka do pliku wynikowego")
-parser.add_argument('--repeats', type=int, default=5, help="Ile razy powtórzyć każdy eksperyment z różnymi seedami")
+parser.add_argument('--output', type=str, default="experiments/results/history_all_final.json", help="Ścieżka do pliku wynikowego")
+parser.add_argument('--repeats', type=int, default=1, help="Ile razy powtórzyć każdy eksperyment z różnymi seedami")
 args = parser.parse_args()
 
 output_path = args.output
@@ -56,42 +56,39 @@ datasets = {
     'bcw': (train_loader_bcw, valid_loader_bcw, test_loader_bcw)
 }
 
-# Konfiguracje dla różnych metod
 configurations = {
     'ES': [
-        {'mu': 30, 'lambda_': 50, 'variant_mu_lambda': True, 'modified_ES' : True},
-        {'mu': 50, 'lambda_': 50, 'variant_mu_lambda': True, 'modified_ES' : True},
-        {'mu': 70, 'lambda_': 50, 'variant_mu_lambda': True, 'modified_ES' : True},
-        {'mu': 90, 'lambda_': 50, 'variant_mu_lambda': True, 'modified_ES' : True},
-
-        {'mu': 50, 'lambda_': 30, 'variant_mu_lambda': True, 'modified_ES' : True},
-        {'mu': 50, 'lambda_': 50, 'variant_mu_lambda': True, 'modified_ES' : True},
-        {'mu': 50, 'lambda_': 70, 'variant_mu_lambda': True, 'modified_ES' : True},
-        {'mu': 50, 'lambda_': 90, 'variant_mu_lambda': True, 'modified_ES' : True},
-
-        {'mu': 30, 'lambda_': 50, 'variant_mu_lambda': False, 'modified_ES' : True},
-        {'mu': 50, 'lambda_': 50, 'variant_mu_lambda': False, 'modified_ES' : True},
-        {'mu': 70, 'lambda_': 50, 'variant_mu_lambda': False, 'modified_ES' : True},
-        {'mu': 90, 'lambda_': 50, 'variant_mu_lambda': False, 'modified_ES' : True},
-
-        {'mu': 50, 'lambda_': 30, 'variant_mu_lambda': False, 'modified_ES' : True},
-        {'mu': 50, 'lambda_': 50, 'variant_mu_lambda': False, 'modified_ES' : True},
-        {'mu': 50, 'lambda_': 70, 'variant_mu_lambda': False, 'modified_ES' : True},
-        {'mu': 50, 'lambda_': 90, 'variant_mu_lambda': False, 'modified_ES' : True},
+        {'mu': mu, 'lambda_': lambda_, 'variant_mu_lambda': variant, 'modified_ES': True}
+        for mu in [90, 70, 50, 30]
+        for lambda_ in [90, 70, 50, 30]
+        for variant in [False, True]
     ],
     'DE': [
-        {'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0},
-        {'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0},
+        {'NP': NP, 'F': F, 'CR': CR, 'max_generations': max_gen, 'initial_lower': -1.0, 'initial_upper': 1.0}
+        for NP in [50, 20]
+        for F in [0.7, 0.5, 0.3]
+        for CR in [0.9, 0.7]
+        for max_gen in [150, 100, 50]
     ],
     'DEAW': [
-        {'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0},
-        {'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0},
+        {'NP': NP, 'F': F, 'CR': CR, 'max_generations': max_gen, 'initial_lower': -1.0, 'initial_upper': 1.0}
+        for NP in [70, 50, 30]
+        for F in [0.8, 0.5, 0.3]
+        for CR in [1.0, 0.9, 0.7]
+        for max_gen in [150, 100, 50]
     ],
     'EDEAdam': [
-        {'pop_size': 50, 'max_evals': 1500, 'exchange_interval': 5, 'batch_size': 32},
-        {'pop_size': 100, 'max_evals': 2000, 'exchange_interval': 10, 'batch_size': 32},
+        {'pop_size': pop_size, 'max_evals': max_evals, 'exchange_interval': exchange_interval, 'batch_size': 32}
+        for pop_size in [250, 100, 50, 25]
+        for max_evals in [1000, 500]
+        for exchange_interval in [100, 50, 25, 10, 5]
+    ],
+    'Adam': [
+        {'epochs': epoch, 'learning_rate': 0.001}
+        for epoch in [50, 30, 10]
     ]
 }
+
 
 seeds = [random.randint(0, 100000) for _ in range(repeats)]
 
@@ -241,8 +238,42 @@ def train_model(model, train_loader, valid_loader, test_loader, method, config, 
         history['test_accuracy'].append(100 * total_test_correct / total_test_samples)
         return model_trained, history
     
+    elif method == 'Adam':
+        model_trained, train_history = train_with_adam(
+            model, train_loader, valid_loader,
+            epochs=config['epochs'],
+            learning_rate=config['learning_rate'],
+            device=device,
+            print_metrics=False
+        )
+        # Przepisz historię do formatu jak w innych metodach
+        for gen in train_history:
+            history['train_loss'].append(gen['train_loss'])
+            history['train_accuracy'].append(gen['train_accuracy'])
+            history['val_loss'].append(gen['val_loss'])
+            history['val_accuracy'].append(gen['val_accuracy'])
+
+        # Metryki na całym zbiorze testowym
+        model_trained.eval()
+        total_test_loss = 0.0
+        total_test_correct = 0
+        total_test_samples = 0
+        with torch.no_grad():
+            for inputs, targets in test_loader:
+                inputs, targets = inputs.to(device), targets.to(device)
+                outputs = model_trained(inputs)
+                loss = nn.CrossEntropyLoss()(outputs, targets)
+                total_test_loss += loss.item() * inputs.size(0)
+                predicted = torch.argmax(outputs, dim=1)
+                total_test_correct += (predicted == targets).sum().item()
+                total_test_samples += targets.size(0)
+        history['test_loss'].append(total_test_loss / total_test_samples)
+        history['test_accuracy'].append(100 * total_test_correct / total_test_samples)
+        return model_trained, history
+
     else:
         raise ValueError(f"Nieznana metoda: {method}")
+
 
 # Funkcje pomocnicze z de.py
 def compute_loss(model, inputs, targets):
@@ -262,13 +293,25 @@ def compute_accuracy(model, inputs, targets):
 results = {}
 training_idx = 0
 start_global_time = time.time()
+
+# Poprawne liczenie liczby treningów
+total_trainings = 0
+for method in configurations:
+    for dataset_name in datasets:
+        num_models = len(models[dataset_name])
+        num_configs = len(configurations[method])
+        total_trainings += num_models * num_configs * len(seeds)
+
 for dataset_name, (train_loader, valid_loader, test_loader) in datasets.items():
     for model_name, model in models[dataset_name].items():
         for method, method_configs in configurations.items():
             for config in method_configs:
                 data = {}
                 for repeat, seed in enumerate(seeds):
+                    trainings_done = training_idx + 1
+                    trainings_left = total_trainings - trainings_done
                     print(f"\n=== Powtórka {repeat+1}/{repeats}, seed={seed} ===\n")
+                    print(f"Trenowań wykonano: {trainings_done} / {total_trainings} (pozostało: {trainings_left})")
                     torch.manual_seed(seed)
                     np.random.seed(seed)
                     random.seed(seed)
@@ -290,10 +333,11 @@ for dataset_name, (train_loader, valid_loader, test_loader) in datasets.items():
                     )
                     elapsed_time = time.time() - start_time
                     data[seed] = {'model': model_trained, 'history': history, 'training_time': elapsed_time}
+                    print(f"Czas trenowania: {elapsed_time:.2f} sekund")
 
                 key = f"{dataset_name}_{model_name}_{method}_{str(config)}"
                 results[key] = data
-                print(f"Czas trenowania: {elapsed_time:.2f} sekund")
+                
                 training_idx += 1
 
 os.makedirs(os.path.dirname(output_path), exist_ok=True)
