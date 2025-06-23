@@ -12935,7 +12935,7 @@
       "model": "MLP(\n  (fc1): Linear(in_features=13, out_features=10, bias=True)\n  (fc2): Linear(in_features=10, out_features=3, bias=True)\n)"
     }
   },
-  "wine_MLP_train_de_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "wine_MLP_DE_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -13777,7 +13777,7 @@
       "model": "MLP(\n  (fc1): Linear(in_features=13, out_features=10, bias=True)\n  (fc2): Linear(in_features=10, out_features=3, bias=True)\n)"
     }
   },
-  "wine_MLP_train_de_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "wine_MLP_DE_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -15019,7 +15019,7 @@
       "model": "MLP(\n  (fc1): Linear(in_features=13, out_features=10, bias=True)\n  (fc2): Linear(in_features=10, out_features=3, bias=True)\n)"
     }
   },
-  "wine_MLP_train_deaw_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "wine_MLP_DEAW_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -15861,7 +15861,7 @@
       "model": "MLP(\n  (fc1): Linear(in_features=13, out_features=10, bias=True)\n  (fc2): Linear(in_features=10, out_features=3, bias=True)\n)"
     }
   },
-  "wine_MLP_train_deaw_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "wine_MLP_DEAW_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -30523,7 +30523,7 @@
       "model": "DeepMLP(\n  (net): Sequential(\n    (0): Linear(in_features=13, out_features=26, bias=True)\n    (1): ReLU()\n    (2): Linear(in_features=26, out_features=13, bias=True)\n    (3): ReLU()\n    (4): Linear(in_features=13, out_features=3, bias=True)\n  )\n)"
     }
   },
-  "wine_DeepMLP_train_de_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "wine_DeepMLP_DE_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -31365,7 +31365,7 @@
       "model": "DeepMLP(\n  (net): Sequential(\n    (0): Linear(in_features=13, out_features=26, bias=True)\n    (1): ReLU()\n    (2): Linear(in_features=26, out_features=13, bias=True)\n    (3): ReLU()\n    (4): Linear(in_features=13, out_features=3, bias=True)\n  )\n)"
     }
   },
-  "wine_DeepMLP_train_de_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "wine_DeepMLP_DE_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -32607,7 +32607,7 @@
       "model": "DeepMLP(\n  (net): Sequential(\n    (0): Linear(in_features=13, out_features=26, bias=True)\n    (1): ReLU()\n    (2): Linear(in_features=26, out_features=13, bias=True)\n    (3): ReLU()\n    (4): Linear(in_features=13, out_features=3, bias=True)\n  )\n)"
     }
   },
-  "wine_DeepMLP_train_deaw_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "wine_DeepMLP_DEAW_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -33449,7 +33449,7 @@
       "model": "DeepMLP(\n  (net): Sequential(\n    (0): Linear(in_features=13, out_features=26, bias=True)\n    (1): ReLU()\n    (2): Linear(in_features=26, out_features=13, bias=True)\n    (3): ReLU()\n    (4): Linear(in_features=13, out_features=3, bias=True)\n  )\n)"
     }
   },
-  "wine_DeepMLP_train_deaw_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "wine_DeepMLP_DEAW_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -48111,7 +48111,7 @@
       "model": "MLP(\n  (fc1): Linear(in_features=4, out_features=8, bias=True)\n  (fc2): Linear(in_features=8, out_features=3, bias=True)\n)"
     }
   },
-  "iris_MLP_train_de_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "iris_MLP_DE_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -48953,7 +48953,7 @@
       "model": "MLP(\n  (fc1): Linear(in_features=4, out_features=8, bias=True)\n  (fc2): Linear(in_features=8, out_features=3, bias=True)\n)"
     }
   },
-  "iris_MLP_train_de_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "iris_MLP_DE_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -50195,7 +50195,7 @@
       "model": "MLP(\n  (fc1): Linear(in_features=4, out_features=8, bias=True)\n  (fc2): Linear(in_features=8, out_features=3, bias=True)\n)"
     }
   },
-  "iris_MLP_train_deaw_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "iris_MLP_DEAW_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -51037,7 +51037,7 @@
       "model": "MLP(\n  (fc1): Linear(in_features=4, out_features=8, bias=True)\n  (fc2): Linear(in_features=8, out_features=3, bias=True)\n)"
     }
   },
-  "iris_MLP_train_deaw_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "iris_MLP_DEAW_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -65699,7 +65699,7 @@
       "model": "DeepMLP(\n  (net): Sequential(\n    (0): Linear(in_features=4, out_features=8, bias=True)\n    (1): ReLU()\n    (2): Linear(in_features=8, out_features=4, bias=True)\n    (3): ReLU()\n    (4): Linear(in_features=4, out_features=3, bias=True)\n  )\n)"
     }
   },
-  "iris_DeepMLP_train_de_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "iris_DeepMLP_DE_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -66541,7 +66541,7 @@
       "model": "DeepMLP(\n  (net): Sequential(\n    (0): Linear(in_features=4, out_features=8, bias=True)\n    (1): ReLU()\n    (2): Linear(in_features=8, out_features=4, bias=True)\n    (3): ReLU()\n    (4): Linear(in_features=4, out_features=3, bias=True)\n  )\n)"
     }
   },
-  "iris_DeepMLP_train_de_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "iris_DeepMLP_DE_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -67783,7 +67783,7 @@
       "model": "DeepMLP(\n  (net): Sequential(\n    (0): Linear(in_features=4, out_features=8, bias=True)\n    (1): ReLU()\n    (2): Linear(in_features=8, out_features=4, bias=True)\n    (3): ReLU()\n    (4): Linear(in_features=4, out_features=3, bias=True)\n  )\n)"
     }
   },
-  "iris_DeepMLP_train_deaw_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "iris_DeepMLP_DEAW_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -68625,7 +68625,7 @@
       "model": "DeepMLP(\n  (net): Sequential(\n    (0): Linear(in_features=4, out_features=8, bias=True)\n    (1): ReLU()\n    (2): Linear(in_features=8, out_features=4, bias=True)\n    (3): ReLU()\n    (4): Linear(in_features=4, out_features=3, bias=True)\n  )\n)"
     }
   },
-  "iris_DeepMLP_train_deaw_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "iris_DeepMLP_DEAW_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -83287,7 +83287,7 @@
       "model": "MLP(\n  (fc1): Linear(in_features=30, out_features=60, bias=True)\n  (fc2): Linear(in_features=60, out_features=2, bias=True)\n)"
     }
   },
-  "bcw_MLP_train_de_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "bcw_MLP_DE_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -84129,7 +84129,7 @@
       "model": "MLP(\n  (fc1): Linear(in_features=30, out_features=60, bias=True)\n  (fc2): Linear(in_features=60, out_features=2, bias=True)\n)"
     }
   },
-  "bcw_MLP_train_de_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "bcw_MLP_DE_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -85371,7 +85371,7 @@
       "model": "MLP(\n  (fc1): Linear(in_features=30, out_features=60, bias=True)\n  (fc2): Linear(in_features=60, out_features=2, bias=True)\n)"
     }
   },
-  "bcw_MLP_train_deaw_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "bcw_MLP_DEAW_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -86213,7 +86213,7 @@
       "model": "MLP(\n  (fc1): Linear(in_features=30, out_features=60, bias=True)\n  (fc2): Linear(in_features=60, out_features=2, bias=True)\n)"
     }
   },
-  "bcw_MLP_train_deaw_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "bcw_MLP_DEAW_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -100875,7 +100875,7 @@
       "model": "DeepMLP(\n  (net): Sequential(\n    (0): Linear(in_features=30, out_features=60, bias=True)\n    (1): ReLU()\n    (2): Linear(in_features=60, out_features=30, bias=True)\n    (3): ReLU()\n    (4): Linear(in_features=30, out_features=2, bias=True)\n  )\n)"
     }
   },
-  "bcw_DeepMLP_train_de_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "bcw_DeepMLP_DE_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -101717,7 +101717,7 @@
       "model": "DeepMLP(\n  (net): Sequential(\n    (0): Linear(in_features=30, out_features=60, bias=True)\n    (1): ReLU()\n    (2): Linear(in_features=60, out_features=30, bias=True)\n    (3): ReLU()\n    (4): Linear(in_features=30, out_features=2, bias=True)\n  )\n)"
     }
   },
-  "bcw_DeepMLP_train_de_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "bcw_DeepMLP_DE_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -102959,7 +102959,7 @@
       "model": "DeepMLP(\n  (net): Sequential(\n    (0): Linear(in_features=30, out_features=60, bias=True)\n    (1): ReLU()\n    (2): Linear(in_features=60, out_features=30, bias=True)\n    (3): ReLU()\n    (4): Linear(in_features=30, out_features=2, bias=True)\n  )\n)"
     }
   },
-  "bcw_DeepMLP_train_deaw_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "bcw_DeepMLP_DEAW_{'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [
@@ -103801,7 +103801,7 @@
       "model": "DeepMLP(\n  (net): Sequential(\n    (0): Linear(in_features=30, out_features=60, bias=True)\n    (1): ReLU()\n    (2): Linear(in_features=60, out_features=30, bias=True)\n    (3): ReLU()\n    (4): Linear(in_features=30, out_features=2, bias=True)\n  )\n)"
     }
   },
-  "bcw_DeepMLP_train_deaw_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
+  "bcw_DeepMLP_DEAW_{'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0}": {
     "79339": {
       "history": {
         "train_loss": [

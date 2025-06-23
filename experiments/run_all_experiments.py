@@ -20,7 +20,7 @@ from models.de import train_de, train_deaw, EDEAdam  # Import wszystkich metod
 # Parser argumentów
 parser = argparse.ArgumentParser()
 parser.add_argument('--output', type=str, default="experiments/results/history_all.json", help="Ścieżka do pliku wynikowego")
-parser.add_argument('--repeats', type=int, default=2, help="Ile razy powtórzyć każdy eksperyment z różnymi seedami")
+parser.add_argument('--repeats', type=int, default=5, help="Ile razy powtórzyć każdy eksperyment z różnymi seedami")
 args = parser.parse_args()
 
 output_path = args.output
@@ -59,16 +59,31 @@ datasets = {
 # Konfiguracje dla różnych metod
 configurations = {
     'ES': [
-        {'mu': 30, 'lambda_': 30, 'variant': 'modified-ES'},
-        {'mu': 50, 'lambda_': 50, 'variant': 'modified-ES'},
-        {'mu': 30, 'lambda_': 30, 'variant': 'mu-lambda'},
-        {'mu': 50, 'lambda_': 50, 'variant': 'mu-lambda'},
+        {'mu': 30, 'lambda_': 50, 'variant_mu_lambda': True, 'modified_ES' : True},
+        {'mu': 50, 'lambda_': 50, 'variant_mu_lambda': True, 'modified_ES' : True},
+        {'mu': 70, 'lambda_': 50, 'variant_mu_lambda': True, 'modified_ES' : True},
+        {'mu': 90, 'lambda_': 50, 'variant_mu_lambda': True, 'modified_ES' : True},
+
+        {'mu': 50, 'lambda_': 30, 'variant_mu_lambda': True, 'modified_ES' : True},
+        {'mu': 50, 'lambda_': 50, 'variant_mu_lambda': True, 'modified_ES' : True},
+        {'mu': 50, 'lambda_': 70, 'variant_mu_lambda': True, 'modified_ES' : True},
+        {'mu': 50, 'lambda_': 90, 'variant_mu_lambda': True, 'modified_ES' : True},
+
+        {'mu': 30, 'lambda_': 50, 'variant_mu_lambda': False, 'modified_ES' : True},
+        {'mu': 50, 'lambda_': 50, 'variant_mu_lambda': False, 'modified_ES' : True},
+        {'mu': 70, 'lambda_': 50, 'variant_mu_lambda': False, 'modified_ES' : True},
+        {'mu': 90, 'lambda_': 50, 'variant_mu_lambda': False, 'modified_ES' : True},
+
+        {'mu': 50, 'lambda_': 30, 'variant_mu_lambda': False, 'modified_ES' : True},
+        {'mu': 50, 'lambda_': 50, 'variant_mu_lambda': False, 'modified_ES' : True},
+        {'mu': 50, 'lambda_': 70, 'variant_mu_lambda': False, 'modified_ES' : True},
+        {'mu': 50, 'lambda_': 90, 'variant_mu_lambda': False, 'modified_ES' : True},
     ],
-    'train_de': [
+    'DE': [
         {'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0},
         {'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0},
     ],
-    'train_deaw': [
+    'DEAW': [
         {'NP': 50, 'F': 0.5, 'CR': 0.9, 'max_generations': 100, 'initial_lower': -1.0, 'initial_upper': 1.0},
         {'NP': 70, 'F': 0.8, 'CR': 0.7, 'max_generations': 150, 'initial_lower': -1.0, 'initial_upper': 1.0},
     ],
@@ -91,7 +106,8 @@ def train_model(model, train_loader, valid_loader, test_loader, method, config, 
     if method == 'ES':
         model_trained, history_es = train_es(
             model, train_loader, valid_loader,
-            variant=config['variant'],
+            variant_mu_lambda=config['variant_mu_lambda'],
+            modified_ES=config['modified_ES'],
             mu=config['mu'],
             lambda_=config['lambda_'],
             max_evals=15000,
@@ -123,7 +139,7 @@ def train_model(model, train_loader, valid_loader, test_loader, method, config, 
         history['test_accuracy'].append(100 * total_test_correct / total_test_samples)
         return model_trained, history
     
-    elif method == 'train_de':
+    elif method == 'DE':
         model_trained, train_history = train_de(
             model, train_loader, valid_loader, device,
             NP=config['NP'],
@@ -157,7 +173,7 @@ def train_model(model, train_loader, valid_loader, test_loader, method, config, 
         history['test_accuracy'].append(100 * total_test_correct / total_test_samples)
         return model_trained, history
     
-    elif method == 'train_deaw':
+    elif method == 'DEAW':
         model_trained, train_history = train_deaw(
             model, train_loader, valid_loader, device,
             NP=config['NP'],

@@ -49,7 +49,7 @@ def binary_tournament_selection(fitnesses, k):
     return selected
 
 # Main training function with training history
-def train_es(model, train_loader, valid_loader, variant='modified-ES', mu=30, lambda_=30, max_evals=15000, device='cpu', print_metrics=True, seed=42):
+def train_es(model, train_loader, valid_loader, variant_mu_lambda=True, modified_ES=True, mu=30, lambda_=30, max_evals=15000, device='cpu', print_metrics=True, seed=42):
     # Initialize model
     n_weights = model.get_weights().numel()
 
@@ -71,7 +71,7 @@ def train_es(model, train_loader, valid_loader, variant='modified-ES', mu=30, la
         offspring_weights = []
         offspring_eta = []
         for _ in range(lambda_):
-            if variant != 'modified-ES':
+            if modified_ES != True:
                 # Select 2 parents
                 parent_indices = binary_tournament_selection(fitnesses, 2)
                 parent1_weights = population_weights[parent_indices[0]]
@@ -120,7 +120,7 @@ def train_es(model, train_loader, valid_loader, variant='modified-ES', mu=30, la
         function_evals += lambda_
         
         # Selection
-        if variant == 'mu_lambda':
+        if variant_mu_lambda == True:
             indices = np.argsort(offspring_fitnesses)[:mu]
             population_weights = [offspring_weights[i] for i in indices]
             population_eta = [offspring_eta[i] for i in indices]

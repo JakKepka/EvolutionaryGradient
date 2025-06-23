@@ -163,7 +163,6 @@ def plot_training_time(averages):
         plt.legend(title='Wariant ES')
         plt.show()
         
-
 # Analiza wpływu zmiennych (mu i lambda) na dokładność walidacyjną
 def plot_analysis_of_input(df):
     # Rozpakowanie zagnieżdżonych słowników
